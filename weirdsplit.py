@@ -47,6 +47,8 @@ group.add_argument("-q", "--quiet", action="store_true")
 #
 parser.add_argument("file", type=str, help="Provide the file")
 parser.add_argument("lines", type=int, help="Provide the target lines")
+parser.add_argument("start", type=int, help="Provide the beginning of substring - notepad++ column")
+parser.add_argument("end", type=int, help="Provide the end of the substring - notepad++ column")
 
 
 ###### 
@@ -56,8 +58,8 @@ args = parser.parse_args()
 
 ######
 # Assign arguments
-NUM_OF_LINES=args.lines
-filename = args.file
+# NUM_OF_LINES=args.lines
+# filename = args.file
 
 
 
@@ -96,12 +98,11 @@ def fileexists(filepath):
 #
 
 
-
-
-
-file_in = sys.argv[1]
-input_line_limit = 5
-
+try:
+    file_in = args.file
+    input_line_limit = args.lines
+    
+    
 group = ""
 prev_group = ""
 file_count = 0
@@ -125,7 +126,7 @@ with open(file_in, 'r') as f:
         last_line = lines
         
         # parse group
-        group = lines[3:6]
+        group = lines[2:6]
         
         
         # check if group is different than previous
@@ -145,9 +146,10 @@ with open(file_in, 'r') as f:
             if line_status >= input_line_limit:
                 print("Checking line status: " + str(line_status) + " <-> " + str(input_line_limit))
                 print("Starting new file")
-                file_count += 1
+                #file_count += 1
                 fout.close()
                 fout = open(str(file_in) + ".out" + ".%d.txt"%(file_count), "w")
+                file_count += 1
                 line_status = 0
             
             # initialize new group
